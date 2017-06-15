@@ -3,9 +3,9 @@ require 'byebug'
 class BinaryMinHeap
   attr_reader :store, :prc
 
-  def initialize(&prc)
+  def initialize(store= [], &prc)
     prc ||= Proc.new{|a,b| a <=> b}
-    @store = []
+    @store = store
     @prc = prc
   end
 
@@ -13,20 +13,31 @@ class BinaryMinHeap
     @store.length
   end
 
-  def extract
+  def extract(len = @store.length)
     @store[0], @store[-1] = @store[-1], @store[0]
     output = @store.pop
-    BinaryMinHeap.heapify_down(@store, 0, @store.length, &@prc )
+    BinaryMinHeap.heapify_down(@store, 0, len - 1, &@prc )
     output
+  end
+
+  def _extract(i)
+    max = @store[0]
+    @store[0], @store[i] = @store[i], @store[0]
+    BinaryMinHeap.heapify_down(@store, 0, i, &@prc)
+    max
   end
 
   def peek
     @store[0]
   end
 
-  def push(val)
+  def push(val, len = @store.length)
     @store.push(val)
-    BinaryMinHeap.heapify_up(@store, @store.length - 1, @store.length, &@prc)
+    BinaryMinHeap.heapify_up(@store, len, len + 1, &@prc)
+  end
+
+  def _push(i)
+    BinaryMinHeap.heapify_up(@store, i, i + 1, &@prc)
   end
 
 
