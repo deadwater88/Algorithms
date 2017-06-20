@@ -8,9 +8,8 @@
 # Import any files you need to
 require_relative 'topological_sort'
 
-
-def install_order(arr)
-  vertices = (1..arr.map(&:max).max).map{|id| Vertex.new(id)}
-  arr.each{|id, dep_id| Edge.new(vertices[dep_id - 1], vertices[id - 1])}
-  topological_sort(vertices).map(&:value)
+def install_order(arr, vertices = {})
+  (1..arr.map(&:max).max).each { |id| vertices[id] = Vertex.new(id) }
+  arr.each { |id, dep_id| Edge.new(vertices[dep_id], vertices[id]) }
+  topological_sort(vertices.values).map(&:value)
 end
