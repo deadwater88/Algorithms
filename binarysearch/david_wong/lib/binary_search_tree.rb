@@ -1,7 +1,7 @@
 # There are many ways to implement these methods, feel free to add arguments
 # to methods as you see fit, or to create helper methods.
 require_relative './bst_node.rb'
-
+require 'byebug'
 
 class BinarySearchTree
   attr_accessor :root
@@ -54,10 +54,8 @@ class BinarySearchTree
       elsif node.right && node.right.value == value
         child = node.right
         relation = :@right
-      elsif value <= node.value
-        node = node.left
       else
-        node = node.right
+        node = value <= node.value ? node.left : node.right
       end
     end
     return {parent: node, child: child, relation: relation}
@@ -78,7 +76,7 @@ class BinarySearchTree
   def depth(tree_node = @root)
     return 0 if tree_node.nil?
     return 0 if !tree_node.left && !tree_node.right
-    return 1 + [depth(tree_node.left) || 0 , depth(tree_node.right)|| 0].max
+    return 1 + [depth(tree_node.left), depth(tree_node.right)].max
   end
 
   def is_balanced?(tree_node = @root)
